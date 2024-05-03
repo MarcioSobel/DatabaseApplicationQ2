@@ -1,0 +1,14 @@
+version: '3.1'
+
+services:
+  database:
+    container_name: "mysql_database"
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_DATABASE: pokemons
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+        - 3306:3306
+    expose:
+        - 3306
