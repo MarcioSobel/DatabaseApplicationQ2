@@ -9,7 +9,9 @@ services:
       MYSQL_DATABASE: pokemons
       MYSQL_ROOT_PASSWORD: root
     ports:
-        - 3306:3306
+      - 3306:3306
+    volumes:
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     
   mongo:
     image: mongo:7
