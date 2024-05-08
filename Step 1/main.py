@@ -1,3 +1,5 @@
-from step1 import csvToSQL
+import convertToServer
+import convertToFile
 
-csvToSQL('bagulho')
+convertToFile.csvToSQL()
+convertToServer.csvToSQL()
