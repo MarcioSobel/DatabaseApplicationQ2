@@ -1,20 +1,30 @@
 import pandas as pd
 import os
+import _mysql_connector
 from sqlalchemy import create_engine, text
+
 
 script_directory = os.path.dirname(os.path.abspath(__file__))
 data_directory = os.path.join(script_directory, os.pardir, 'data')
 
-pokemons = pd.read_csv(f"{data_directory}/pokemon_data.csv")
-moves = pd.read_csv(f"{data_directory}/ability.csv")
-stats = pd.read_csv(f"{data_directory}/stats.csv")
+abilities = pd.read_csv(f"{data_directory}/abilities.csv")
+items = pd.read_csv(f"{data_directory}/items.csv")
+moves = pd.read_csv(f"{data_directory}/moves.csv")
+movesets = pd.read_csv(f"{data_directory}/movesets.csv")
+natures = pd.read_csv(f"{data_directory}/natures.csv")
+pokedex = pd.read_csv(f"{data_directory}/pokedex.csv")
+pokemon = pd.read_csv(f"{data_directory}/pokemon.csv")
+type = pd.read_csv(f"{data_directory}/type-chart.csv")
 
-pokemons = pd.merge(pokemons, moves, on='pokedex_nr')
-pokemons_final = pd.merge(pokemons, stats, on= 'pokedex_nr')
-pokemons_final.drop(index=0)
+moves = moves.rename(columns = {"id":"move_id"})
 
-tablename = "tabela_de_pokemons"
-with open(f'{tablename}.sql', 'w', encoding='utf-8') as file:
-        for _, row in pokemons_final.iterrows():
-            query = f"INSERT INTO {tablename} ({', '.join(pokemons.columns)}) VALUES ({', '.join(row.astype(str).values)});\n"
-            file.write(query)
+pokemon_possui_moves = pd.merge(pokemon,moves, left_on ="id", right_on = "move_id")
+
+connection_string = "mysql+mysqlconnector://root:root@localhost:3306/pokemon"
+engine = create_engine(connection_string)
+sql_query = "SELECT * FROM pokemon"
+
+df = pd.read_sql(sql_query, engine)
+
+print(df)
+            
