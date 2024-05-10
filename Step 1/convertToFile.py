@@ -2,7 +2,7 @@ from pandas import DataFrame
 from getDataFrame import *
 
 def csvToSQL() -> None:
-    pokemons = getDataFrame(type='json')
+    pokemons = getDataFrame()
 
     with open(f"pokemon.sql", 'w') as file:
         for _, row in pokemons.iterrows():
