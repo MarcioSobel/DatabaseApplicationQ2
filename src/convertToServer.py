@@ -10,7 +10,7 @@ def csvToSQL() -> None:
     abilities = getDataFrame("abilities.csv")
     pokemon = getDataFrame("pokemon.csv")
     pokemonWithMoves = getDataFrame("pokedex.csv")
-    pokemon = pd.merge(pokemon, pokemonWithMoves, left_on="ndex", right_on="Id", how="left")
+    pokemon = pd.merge(pokemon, pokemonWithMoves, left_on="ndex", right_on="Id")
 
     abilities = createAutoIncrementColumn(abilities, "ability_id")
 
@@ -20,7 +20,7 @@ def csvToSQL() -> None:
     abilities_list = ["ability1", "ability2", "abilityH"]
 
     for ability in abilities_list:
-        temp = pd.merge(pokemon, abilities, left_on=ability, right_on="ability", how="left")
+        temp = pd.merge(pokemon, abilities, left_on=ability, right_on="ability")
         temp = temp[["ndex", "ability_id"]].rename(columns={"ndex": "pokemon_id"}).dropna()
         pokemon_has_abilities = pd.concat([pokemon_has_abilities, temp])
     pokemon_has_abilities = pokemon_has_abilities.drop_duplicates()
