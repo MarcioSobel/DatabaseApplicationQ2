@@ -1,7 +1,7 @@
 import ast
 import cleanup
 import pandas as pd
-from sqlalchemy import create_engine
+from getEngine import *
 from getDataFrame import *
 from resetDatabase import *
 
@@ -97,7 +97,7 @@ def csvToSQL() -> None:
     moves = cleanup.addTypeFK(moves, types)
     type_effectiveness = cleanup.type_effectiveness(type_effectiveness)
 
-    engine = create_engine("mysql+pymysql://root:root@localhost:3306/pokemon")
+    engine = getEngine()
 
     resetDatabase(engine) # else foreign keys won't work, further explanation below @ why reset the database?)
 
