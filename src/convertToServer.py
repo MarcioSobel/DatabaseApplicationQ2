@@ -39,6 +39,16 @@ def csvToSQL() -> None:
     pokemon_evolves_to_pokemon = pokemon_evolves_to_pokemon.drop_duplicates()
     pokemon_evolves_to_pokemon = pokemon_evolves_to_pokemon.rename(columns={"pokemon_id": "evolves_from"})
 
+    # pokemon_has_types
+    pokemon_has_types = pd.DataFrame()
+    types_list = ["type1", "type2"]
+
+    for type in types_list:
+        temp = pd.merge(pokemon, types, left_on=type, right_on="type", how="right")
+        temp = temp[["ndex", "type_id"]].rename(columns={"ndex": "pokemon_id"}).dropna()
+        pokemon_has_types = pd.concat([pokemon_has_types, temp])
+    pokemon_has_types = pokemon_has_types.drop_duplicates()
+
     ########## CLEANUP AND SENDING TO SQL SERVER ##########
     pokemon = cleanup.pokemon(pokemon)
     abilities = cleanup.abilities(abilities)
@@ -54,6 +64,7 @@ def csvToSQL() -> None:
 
     pokemon_has_abilities.to_sql("pokemon_has_abilities", con=engine, index=False, if_exists="append")
     pokemon_evolves_to_pokemon.to_sql("pokemon_evolves_to_pokemon", con=engine, index=False, if_exists="append")
+    pokemon_has_types.to_sql("pokemon_has_types", con=engine, index=False, if_exists="append")
 
     print(f"sucessfully uploaded data to SQL server")
 
