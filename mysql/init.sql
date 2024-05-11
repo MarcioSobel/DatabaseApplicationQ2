@@ -37,7 +37,7 @@ CREATE TABLE types (
 
 CREATE TABLE moves (
 	id INT AUTO_INCREMENT,
-    move VARCHAR(20) NOT NULL,
+    move VARCHAR(50) NOT NULL,
     description TEXT,
     effect INT,
     power INT,
