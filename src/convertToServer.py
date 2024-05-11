@@ -74,6 +74,19 @@ def csvToSQL() -> None:
 
     type_effectiveness = type_chart.drop_duplicates()
 
+    # pokemon_has_moves
+    pokemon_has_moves = pd.DataFrame()
+    moves_to_id = moves.set_index("move")["move_id"].to_dict() # { move: move_id }
+
+    moves_list = []
+    for _, row in pokemonWithMoves.iterrows():
+        for move in row["Moves"].keys():
+            moves_list.append([row["Id"], move]) # [pokemon_id, move]
+    pokemon_has_moves = pd.DataFrame(moves_list, columns=["pokemon_id", "move"])
+    pokemon_has_moves["move_id"] = pokemon_has_moves["move"].map(moves_to_id).astype("Int64")
+    pokemon_has_moves = pokemon_has_moves.drop(columns=["move"]).dropna().drop_duplicates()
+    # https://stackoverflow.com/questions/41800424/remove-rows-in-python-less-than-a-certain-value
+    pokemon_has_moves = pokemon_has_moves[pokemon_has_moves["pokemon_id"] <= 802]
 
     ########## CLEANUP AND SENDING TO SQL SERVER ##########
     pokemon = cleanup.pokemon(pokemon)
@@ -96,7 +109,7 @@ def csvToSQL() -> None:
     pokemon_evolves_to_pokemon.to_sql("pokemon_evolves_to_pokemon", con=engine, index=False, if_exists="append")
     pokemon_has_types.to_sql("pokemon_has_types", con=engine, index=False, if_exists="append")
     type_effectiveness.to_sql("type_effectiveness", con=engine, index=False, if_exists="append")
-    
+    pokemon_has_moves.to_sql("pokemon_has_moves", con=engine, index=False, if_exists="append")
 
     print(f"sucessfully uploaded data to SQL server")
 
