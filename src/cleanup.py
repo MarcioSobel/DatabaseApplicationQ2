@@ -68,3 +68,9 @@ def types(types: DataFrame) -> DataFrame:
     return types.rename(columns={
         "type_id": "id",
     })
+
+def type_effectiveness(type_effectiveness: DataFrame) -> DataFrame:
+    return type_effectiveness.rename(columns={
+        "defense-type1": "defending_type_id",
+        "defense-type2": "defending_type2_id"
+    })

@@ -64,13 +64,13 @@ def csvToSQL() -> None:
     type_chart[types_list] = type_chart[types_list].map(type_to_id.get)
     type_chart['defense-type2'] = type_chart['defense-type2'].astype('Int64')
 
-    type_effectiveness = type_chart.dropna().drop_duplicates()
-    type_effectiveness = type_effectiveness.rename(columns={"defense-type1": "defending_type_id", "defense-type2": "defending_type2_id"})
+    type_effectiveness = type_chart.drop_duplicates()
 
     ########## CLEANUP AND SENDING TO SQL SERVER ##########
     pokemon = cleanup.pokemon(pokemon)
     abilities = cleanup.abilities(abilities)
     types = cleanup.types(types)
+    type_effectiveness = cleanup.type_effectiveness(type_effectiveness)
 
     engine = create_engine("mysql+pymysql://root:root@localhost:3306/pokemon")
 
