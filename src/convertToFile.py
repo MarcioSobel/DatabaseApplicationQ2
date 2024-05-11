@@ -3,14 +3,14 @@ from pandas import DataFrame
 from getDataFrame import *
 
 def csvToSQL() -> None:
-    items = getDataFrame("items.csv")
-    moves = getDataFrame("moves.csv")
-    natures = getDataFrame("natures.csv")
-    pokedex = getDataFrame("pokedex.csv")
-    pokemon = getDataFrame("pokemon.csv")
-    movesets = getDataFrame("movesets.csv")
-    abilities = getDataFrame("abilities.csv")
-    type_chart = getDataFrame("type-chart.csv")
+    items = getDataFrame("items")
+    moves = getDataFrame("moves")
+    natures = getDataFrame("natures")
+    pokedex = getDataFrame("pokedex")
+    pokemon = getDataFrame("pokemon")
+    movesets = getDataFrame("movesets")
+    abilities = getDataFrame("abilities")
+    type_chart = getDataFrame("type-chart")
 
     directory = createDataDir()
 
