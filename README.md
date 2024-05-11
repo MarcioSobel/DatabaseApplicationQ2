@@ -11,9 +11,11 @@
     - [Acessando o banco de dados](#acessando-o-banco-de-dados)
     - [Finalizando o container](#finalizando-o-container)
     - [Erros conhecidos](#erros-conhecidos)
-
+- [Rodando o código](#rodando-o-código)
+    - [Configurando o ambiente virtual](#configurando-o-ambiente-virtual)
+    - [Instalando pré-requisitos](#instalando-pré-requisitos)
 ## Sobre o projeto
-Trabalhar as capacidades de modelagem lógica e física, engenharia reversa a partir de um dataset pré-existente e utilização de bases de dados NoSQL.
+O objetivo do projeto é trabalhar as capacidades de modelagem lógica e física, engenharia reversa a partir de um dataset pré-existente e utilização de bases de dados NoSQL.
 
 ### Tecnologias
 Para este projeto, foi utilizada as seguintes tecnologias:
@@ -87,6 +89,7 @@ onde o `ID ou nome do container` podem ser encontrados no arquivo `docker-compos
 ```
 $ docker ps
 ``` 
+Outra alternativa é usar o [MySQL workbench](https://www.mysql.com/products/workbench/) ou o [MongoDB Compass](https://www.mongodb.com/products/tools/compass).
 
 ### Finalizando o container
 Para finalizar o container, basta executar o seguinte comando no terminal:
@@ -110,3 +113,37 @@ ou
 $ systemctl start docker.socket
 ```
 (O mesmo vale para parar a engine, apenas troque `start` por `stop`)
+
+## Rodando o código
+
+### Configurando o ambiente virtual
+Primeiramente, para rodar o código você precisa ter o [Python](https://www.python.org/) e o [pip](https://pypi.org/project/pip/) instalados. (Python e PIP já vem pré-instalados na maioria das distribuições Linux)
+Após isso, crie o ambiente virtual venv através do seguinte comando:
+```
+$ python -m venv .venv
+```
+E, para usá-lo, execute o seguinte:
+Linux:
+```
+$ source .venv/bin/activate
+```
+Windows:
+```
+> .venv\Scripts\activate.bat
+```
+caso esse não funcione, tente:
+```
+> .venv\Scripts\Activate.ps1
+```
+
+### Instalando pré-requisitos
+Agora, basta instalar os pré-requisitos do projeto usando o seguinte comando:
+```
+$ pip install -r requirements.txt
+```
+
+### Testando o projeto
+Para testar os algoritmos, basta executar o comando:
+```
+$ python ./src/main.py
+```
