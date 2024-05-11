@@ -1,5 +1,7 @@
-import pandas as pd
+import ast
+import json
 import cleanup
+import pandas as pd
 from sqlalchemy import create_engine
 from getDataFrame import *
 from resetDatabase import *
@@ -9,8 +11,10 @@ def csvToSQL() -> None:
     abilities = getDataFrame("abilities")
     type_chart = getDataFrame("type-chart")
     types = type_chart.copy()
+    moves = getDataFrame("moves")
 
     pokemonWithMoves = getDataFrame("pokedex")
+    pokemonWithMoves["Moves"] = pokemonWithMoves["Moves"].apply(ast.literal_eval)
     pokemonDescriptions = getDataFrame("poki_descs")
     pokemon = pd.merge(pokemon, pokemonWithMoves, left_on="ndex", right_on="Id")
     pokemon = pd.merge(pokemon, pokemonDescriptions, left_on="species", right_on="name", how="left")
@@ -21,6 +25,10 @@ def csvToSQL() -> None:
     types = createAutoIncrementColumn(types, "type_id")
     types_lowercase = types["type"].apply(lambda x: pd.Series(str.lower(x))).rename(columns={0: "type"})
     types_lowercase["type_id"] = types["type_id"]
+
+    moves = moves.replace("—", numpy.nan)
+    moves["accuracy"] = moves["accuracy"].str.replace("%", "").astype("Int64")
+    moves = moves.rename(columns={"id": "move_id"})
 
     ########## RELATIONSHIPS ##########
     # pokemon_has_abilities
@@ -62,14 +70,17 @@ def csvToSQL() -> None:
     type_to_id = types_lowercase.set_index("type")["type_id"].to_dict() # { type: type_id }
     types_list = ["attacking_type_id", "defense-type1", "defense-type2"]
     type_chart[types_list] = type_chart[types_list].map(type_to_id.get)
-    type_chart['defense-type2'] = type_chart['defense-type2'].astype('Int64')
+    type_chart["defense-type2"] = type_chart["defense-type2"].astype("Int64")
 
     type_effectiveness = type_chart.drop_duplicates()
+
 
     ########## CLEANUP AND SENDING TO SQL SERVER ##########
     pokemon = cleanup.pokemon(pokemon)
     abilities = cleanup.abilities(abilities)
     types = cleanup.types(types)
+    moves = cleanup.moves(moves)
+    moves = cleanup.addTypeFK(moves, types)
     type_effectiveness = cleanup.type_effectiveness(type_effectiveness)
 
     engine = create_engine("mysql+pymysql://root:root@localhost:3306/pokemon")
@@ -79,11 +90,13 @@ def csvToSQL() -> None:
     pokemon.to_sql("pokemon", con=engine, index=False, if_exists="append")
     abilities.to_sql("abilities", con=engine, index=False, if_exists="append")
     types.to_sql("types", con=engine, index=False, if_exists="append")
+    moves.to_sql("moves", con=engine, index=False, if_exists="append")
 
     pokemon_has_abilities.to_sql("pokemon_has_abilities", con=engine, index=False, if_exists="append")
     pokemon_evolves_to_pokemon.to_sql("pokemon_evolves_to_pokemon", con=engine, index=False, if_exists="append")
     pokemon_has_types.to_sql("pokemon_has_types", con=engine, index=False, if_exists="append")
     type_effectiveness.to_sql("type_effectiveness", con=engine, index=False, if_exists="append")
+    
 
     print(f"sucessfully uploaded data to SQL server")
 

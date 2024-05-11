@@ -69,8 +69,24 @@ def types(types: DataFrame) -> DataFrame:
         "type_id": "id",
     })
 
+def moves(moves: DataFrame) -> DataFrame:
+    return moves.drop(columns=[
+        "category",
+        "z-effect",
+        "priority",
+        "crit"
+    ]).rename(columns={
+        "move_id": "id",
+        "pp": "power_points"
+    })
+
 def type_effectiveness(type_effectiveness: DataFrame) -> DataFrame:
     return type_effectiveness.rename(columns={
         "defense-type1": "defending_type_id",
         "defense-type2": "defending_type2_id"
     })
+
+def addTypeFK(moves: DataFrame, types: DataFrame) -> DataFrame:
+    type_to_id = types.set_index("type")["id"].to_dict() # { type: type_id }
+    moves["type_id"] = moves["type"].map(type_to_id)
+    return moves.drop(columns=["type"])
