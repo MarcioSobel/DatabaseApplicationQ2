@@ -16,8 +16,10 @@ def csvToSQL() -> None:
     pokemonWithMoves = getDataFrame("pokedex")
     pokemonWithMoves["Moves"] = pokemonWithMoves["Moves"].apply(ast.literal_eval)
     pokemonDescriptions = getDataFrame("poki_descs")
+    pokemonLegendary = getDataFrame("pokemonLegendary")[["pokedex_number", "legendary", "mythical"]]
     pokemon = pd.merge(pokemon, pokemonWithMoves, left_on="ndex", right_on="Id")
     pokemon = pd.merge(pokemon, pokemonDescriptions, left_on="species", right_on="name", how="left")
+    pokemon = pd.merge(pokemon, pokemonLegendary, left_on="ndex", right_on="pokedex_number").drop(columns=["pokedex_number"])
 
     abilities = createAutoIncrementColumn(abilities, "ability_id")
     

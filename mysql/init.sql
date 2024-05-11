@@ -13,8 +13,8 @@ CREATE TABLE pokemon (
     speed INT,
     total INT,
     capture_rate INT,
-    is_legendary TINYINT,
-    is_mythical TINYINT,
+    legendary TINYINT,
+    mythical TINYINT,
     
     PRIMARY KEY (pokedex_number)
 );
