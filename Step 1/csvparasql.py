@@ -1,3 +1,4 @@
+import math
 import pandas as pd
 import os
 import _mysql_connector
@@ -16,15 +17,31 @@ pokedex = pd.read_csv(f"{data_directory}/pokedex.csv")
 pokemon = pd.read_csv(f"{data_directory}/pokemon.csv")
 type = pd.read_csv(f"{data_directory}/type-chart.csv")
 
-moves = moves.rename(columns = {"id":"move_id"})
 
-pokemon_possui_moves = pd.merge(pokemon,moves, left_on ="id", right_on = "move_id")
+moves = moves.rename(columns={"id":"move_id"})
+
+#abilities = abilities.drop(columns=["description"])
+
+pokemon_has_abilities = pd.DataFrame()
+abilities_list = ["ability1","ability2","abilityH"]
+
+for ability in abilities_list:
+    temp = pd.merge(pokemon,abilities, left_on=ability, right_on="ability", how="left")
+    temp = temp[["ndex", "ability"]].rename(columns={"ndex": "pokemon_id"}).dropna()
+    pokemon_has_abilities = pd.concat([pokemon_has_abilities, temp])
+pokemon_has_abilities = pokemon_has_abilities.drop_duplicates()
+
+
+
+
 
 connection_string = "mysql+mysqlconnector://root:root@localhost:3306/pokemon"
 engine = create_engine(connection_string)
-sql_query = "SELECT * FROM pokemon"
 
-df = pd.read_sql(sql_query, engine)
+pokemon_has_abilities.to_sql("teste",con=engine,if_exists="replace",index=False)
 
-print(df)
-            
+
+#print(pokemon_has_abilities)
+
+print("Aplicação feita")
+
