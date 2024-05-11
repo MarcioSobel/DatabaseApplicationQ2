@@ -46,7 +46,7 @@ def pokemon(pokemon: DataFrame) -> DataFrame:
         "Moves"
     ]).rename(columns={
         "ndex": "pokedex_number",
-        "species": "name",
+        "species": "pokemon",
         "spattack": "special_attack",
         "spdefense": "special_defense",
         "class": "category",
@@ -58,11 +58,9 @@ def pokemon(pokemon: DataFrame) -> DataFrame:
 def abilities(abilities: DataFrame) -> DataFrame:
     return abilities.rename(columns={
         "ability_id": "id",
-        "ability": "name"
     })
 
 def types(types: DataFrame) -> DataFrame:
     return types.rename(columns={
         "type_id": "id",
-        "type": "name"
     })
