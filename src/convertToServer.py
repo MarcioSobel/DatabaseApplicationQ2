@@ -133,5 +133,3 @@ def csvToSQL() -> None:
 # json (pokemon moves)
 # json.loads (str -> dic)
 # df.apply: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.apply.html
-
-csvToSQL()
