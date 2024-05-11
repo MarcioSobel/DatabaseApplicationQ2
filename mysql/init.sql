@@ -1,18 +1,18 @@
 CREATE TABLE pokemon (
     pokedex_number INT,
-    name VARCHAR(20) NOT NULL,
+    pokemon VARCHAR(20) NOT NULL,
     description VARCHAR(255),
-    category VARCHAR(25) NOT NULL,
+    category VARCHAR(25),
     height DECIMAL(10),
     weight DECIMAL(10),
-    hp INT NOT NULL,
-    attack INT NOT NULL,
-    defense INT NOT NULL,
-    special_attack INT NOT NULL,
-    special_defense INT NOT NULL,
-    speed INT NOT NULL,
-    total INT NOT NULL,
-    capture_rate INT NOT NULL,
+    hp INT,
+    attack INT,
+    defense INT,
+    special_attack INT,
+    special_defense INT,
+    speed INT,
+    total INT,
+    capture_rate INT,
     is_legendary TINYINT,
     
     PRIMARY KEY (pokedex_number)
@@ -20,7 +20,7 @@ CREATE TABLE pokemon (
 
 CREATE TABLE abilities (
     id INT AUTO_INCREMENT,
-    name VARCHAR(20) NOT NULL,
+    ability VARCHAR(20) NOT NULL,
     description VARCHAR(255),
     effect INT,
     
@@ -29,7 +29,7 @@ CREATE TABLE abilities (
 
 CREATE TABLE types (
     id INT AUTO_INCREMENT,
-    name VARCHAR(20) NOT NULL,
+    type VARCHAR(20) NOT NULL,
     description VARCHAR(255),
     
     PRIMARY KEY (id)
@@ -37,13 +37,12 @@ CREATE TABLE types (
 
 CREATE TABLE moves (
 	id INT AUTO_INCREMENT,
-    name VARCHAR(20) NOT NULL,
+    move VARCHAR(20) NOT NULL,
     description VARCHAR(255),
-    category VARCHAR(35) NOT NULL,
     effect INT,
-    power INT NOT NULL,
-    accuracy INT NOT NULL,
-    power_points INT NOT NULL,
+    power INT,
+    accuracy INT,
+    power_points INT,
     type_id INT,
     
     PRIMARY KEY (id),
