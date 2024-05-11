@@ -1,5 +1,4 @@
 import ast
-import json
 import cleanup
 import pandas as pd
 from sqlalchemy import create_engine
