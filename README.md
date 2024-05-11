@@ -32,7 +32,12 @@ Para este projeto, foi utilizada as seguintes tecnologias:
 
 ## Datasets
 O tema escolhido para o projeto foi [Pokémon](https://en.wikipedia.org/wiki/Pok%C3%A9mon).
-Os datasets escolhidos para a aplicação foram [Pokemon Gen VII Pokedex with Moves](https://www.kaggle.com/datasets/csobral/pokemon-gen-vii-pokedex) e [Pokemon Sun and Moon (Gen 7) Stats](https://www.kaggle.com/datasets/mylesoneill/pokemon-sun-and-moon-gen-7-stats?select=type-chart.csv)
+Infelizmente, não havia um "super-dataset" com todos os dados que buscávamos no kaggle. Então, pegamos vários (mesmo que compartilhassem de alguns dados iguais) e juntamos todos.
+Os datasets escolhidos para a aplicação foram:
+- [Pokemon Gen VII Pokedex with Moves](https://www.kaggle.com/datasets/csobral/pokemon-gen-vii-pokedex)
+- [Pokemon Sun and Moon (Gen 7) Stats](https://www.kaggle.com/datasets/mylesoneill/pokemon-sun-and-moon-gen-7-stats?select=type-chart.csv)
+- [Pokemon Descriptions](https://www.kaggle.com/datasets/naafeyaamer/pokemon-descriptions)
+- [Complete Pokemon Dataset](https://www.kaggle.com/datasets/kylekohnen/complete-pokemon-data-set)
 
 ## Iniciando o banco de dados
 Para iniciar o banco de dados, utilizaremos o `docker`. Se você já estiver com ele instalado ou já for familiarizado com, pode pular para a seção [Iniciando o banco de dados](#iniciando-o-banco-de-dados).
@@ -90,6 +95,8 @@ $ docker compose down
 ```
 
 ### Erros conhecidos
+
+#### Docker não inicia
 No Linux, pode acontecer da engine do docker não estar executando, gerando assim o seguinte erro:
 ```
 Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
