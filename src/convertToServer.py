@@ -5,11 +5,14 @@ from getDataFrame import *
 from resetDatabase import *
 
 def csvToSQL() -> None:
-    abilities = getDataFrame("abilities")
     pokemon = getDataFrame("pokemon")
+    abilities = getDataFrame("abilities")
     types = getDataFrame("type-chart")
+
     pokemonWithMoves = getDataFrame("pokedex")
+    pokemonDescriptions = getDataFrame("poki_descs")
     pokemon = pd.merge(pokemon, pokemonWithMoves, left_on="ndex", right_on="Id")
+    pokemon = pd.merge(pokemon, pokemonDescriptions, left_on="species", right_on="name", how="left")
 
     abilities = createAutoIncrementColumn(abilities, "ability_id")
     
@@ -87,3 +90,5 @@ def csvToSQL() -> None:
 # json (pokemon moves)
 # json.loads (str -> dic)
 # df.apply: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.apply.html
+
+csvToSQL()

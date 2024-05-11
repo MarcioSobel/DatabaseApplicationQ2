@@ -43,7 +43,10 @@ def pokemon(pokemon: DataFrame) -> DataFrame:
         "Sp. Attack",
         "Sp. Defense",
         "Speed",
-        "Moves"
+        "Moves",
+
+        # poki_descs.csv
+        "name"
     ]).rename(columns={
         "ndex": "pokedex_number",
         "species": "pokemon",
@@ -52,7 +55,8 @@ def pokemon(pokemon: DataFrame) -> DataFrame:
         "class": "category",
         "Height (m)": "height",
         "Weight (kg)": "weight",
-        "Capture Rate": "capture_rate"
+        "Capture Rate": "capture_rate",
+        "desc": "description"
     }).drop_duplicates(subset=["pokedex_number"]).dropna(subset=["pokedex_number"])
 
 def abilities(abilities: DataFrame) -> DataFrame:
