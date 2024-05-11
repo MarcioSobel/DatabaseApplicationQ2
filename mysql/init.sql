@@ -1,7 +1,7 @@
 CREATE TABLE pokemon (
     pokedex_number INT,
     pokemon VARCHAR(20) NOT NULL,
-    description VARCHAR(255),
+    description TEXT,
     category VARCHAR(25),
     height DECIMAL(10),
     weight DECIMAL(10),
@@ -21,7 +21,7 @@ CREATE TABLE pokemon (
 CREATE TABLE abilities (
     id INT AUTO_INCREMENT,
     ability VARCHAR(20) NOT NULL,
-    description VARCHAR(255),
+    description TEXT,
     effect INT,
     
     PRIMARY KEY (id)
@@ -30,7 +30,7 @@ CREATE TABLE abilities (
 CREATE TABLE types (
     id INT AUTO_INCREMENT,
     type VARCHAR(20) NOT NULL,
-    description VARCHAR(255),
+    description TEXT,
     
     PRIMARY KEY (id)
 );
@@ -38,7 +38,7 @@ CREATE TABLE types (
 CREATE TABLE moves (
 	id INT AUTO_INCREMENT,
     move VARCHAR(20) NOT NULL,
-    description VARCHAR(255),
+    description TEXT,
     effect INT,
     power INT,
     accuracy INT,
