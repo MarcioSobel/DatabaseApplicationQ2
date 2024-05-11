@@ -14,6 +14,7 @@ CREATE TABLE pokemon (
     total INT,
     capture_rate INT,
     is_legendary TINYINT,
+    is_mythical TINYINT,
     
     PRIMARY KEY (pokedex_number)
 );
