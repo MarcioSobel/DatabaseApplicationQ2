@@ -84,8 +84,10 @@ CREATE TABLE pokemon_has_moves (
 CREATE TABLE type_effectiveness (
     attacking_type_id INT,
     defending_type_id INT,
+    defending_type2_id INT,
     multiplier DECIMAL(3, 2),
 
-    FOREIGN KEY attacking_type_id REFERENCES types(id),
-    FOREIGN KEY defending_type_id REFERENCES types(id)
+    FOREIGN KEY (attacking_type_id) REFERENCES types(id),
+    FOREIGN KEY (defending_type_id) REFERENCES types(id),
+    FOREIGN KEY (defending_type2_id) REFERENCES types(id)
 );
