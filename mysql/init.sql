@@ -81,10 +81,11 @@ CREATE TABLE pokemon_has_moves (
     FOREIGN KEY (move_id) REFERENCES moves(id)
 );
 
-CREATE TABLE types_impacts_types (
-    type_id INT,
-    impacts_type_id INT,
-    
-    FOREIGN KEY (type_id) REFERENCES types(id),
-    FOREIGN KEY (impacts_type_id) REFERENCES types(id)
+CREATE TABLE type_effectiveness (
+    attacking_type_id INT,
+    defending_type_id INT,
+    multiplier DECIMAL(3, 2),
+
+    FOREIGN KEY attacking_type_id REFERENCES types(id),
+    FOREIGN KEY defending_type_id REFERENCES types(id)
 );
