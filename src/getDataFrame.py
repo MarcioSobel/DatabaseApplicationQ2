@@ -6,7 +6,7 @@ def getDataFrame(filename: str) -> pd.DataFrame:
     script_directory = os.path.dirname(os.path.abspath(__file__))
     data_directory = os.path.join(script_directory, os.pardir, "data")
 
-    df = pd.read_csv(f"{data_directory}/{filename}")
+    df = pd.read_csv(f"{data_directory}/{filename}.csv")
 
     return df
 

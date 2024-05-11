@@ -5,10 +5,10 @@ from getDataFrame import *
 from resetDatabase import *
 
 def csvToSQL() -> None:
-    abilities = getDataFrame("abilities.csv")
-    pokemon = getDataFrame("pokemon.csv")
-    types = getDataFrame("type-chart.csv")
-    pokemonWithMoves = getDataFrame("pokedex.csv")
+    abilities = getDataFrame("abilities")
+    pokemon = getDataFrame("pokemon")
+    types = getDataFrame("type-chart")
+    pokemonWithMoves = getDataFrame("pokedex")
     pokemon = pd.merge(pokemon, pokemonWithMoves, left_on="ndex", right_on="Id")
 
     abilities = createAutoIncrementColumn(abilities, "ability_id")
