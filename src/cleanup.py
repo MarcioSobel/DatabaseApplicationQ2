@@ -1,6 +1,6 @@
 from pandas import DataFrame
 
-def cleanUpPokemon(pokemon: DataFrame) -> DataFrame:
+def pokemon(pokemon: DataFrame) -> DataFrame:
     """
     All this function does is drop columns
     that won't be used and rename columns so they fit in
@@ -55,8 +55,14 @@ def cleanUpPokemon(pokemon: DataFrame) -> DataFrame:
         "Capture Rate": "capture_rate"
     }).drop_duplicates(subset=["pokedex_number"]).dropna(subset=["pokedex_number"])
 
-def cleanUpAbilities(abilities: DataFrame) -> DataFrame:
+def abilities(abilities: DataFrame) -> DataFrame:
     return abilities.rename(columns={
         "ability_id": "id",
         "ability": "name"
+    })
+
+def types(types: DataFrame) -> DataFrame:
+    return types.rename(columns={
+        "type_id": "id",
+        "type": "name"
     })
