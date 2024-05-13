@@ -10,6 +10,7 @@ def mySQLtoMongoDB():
 
     pokemon_has_types = get_table("pokemon_has_types")
     pokemon_has_moves = get_table("pokemon_has_moves")
+    pokemon_evolves_to_pokemon = get_table("pokemon_evolves_to_pokemon")
 
     ######### HANDLE RELATIONSHIPS #########
     pivots = ["pokedex_number", "pokemon"]
@@ -19,6 +20,9 @@ def mySQLtoMongoDB():
     
     # pokemon_has_moves
     pokemon = merge_and_group(pokemon, pokemon_has_moves, "pokedex_number", "pokemon_id", pivots, ["pokemon"], "move_id", "move_ids")
+
+    # pokemon_evolves_to_pokemon
+    pokemon = merge_and_group(pokemon, pokemon_evolves_to_pokemon, "pokedex_number", "evolves_from", pivots, ["pokemon"], "evolves_to")
 
     ######### RENAME ID COLUMNS TO _ID #########
     pokemon = pokemon.rename(columns={"pokedex_number": "_id"})
@@ -50,7 +54,7 @@ def merge_and_group(
         old_column_name: str,
         new_column_name: str = "",
     ) -> pd.DataFrame:
-    dataframe = pd.merge(dataframe, relationship_dataframe, left_on=left_on, right_on=right_on)
+    dataframe = pd.merge(dataframe, relationship_dataframe, left_on=left_on, right_on=right_on, how="left")
     # https://stackoverflow.com/questions/64235312/how-to-implodereverse-of-pandas-explode-based-on-a-column
     grouped = dataframe.groupby(groupby).agg({old_column_name: list}).reset_index()
     grouped = grouped.drop(columns=drop_columns)
