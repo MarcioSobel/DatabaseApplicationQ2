@@ -23,7 +23,6 @@ CREATE TABLE abilities (
     id INT AUTO_INCREMENT,
     ability VARCHAR(20) NOT NULL,
     description TEXT,
-    effect INT,
     
     PRIMARY KEY (id)
 );
@@ -31,7 +30,6 @@ CREATE TABLE abilities (
 CREATE TABLE types (
     id INT AUTO_INCREMENT,
     type VARCHAR(20) NOT NULL,
-    description TEXT,
     
     PRIMARY KEY (id)
 );
@@ -40,7 +38,6 @@ CREATE TABLE moves (
 	id INT AUTO_INCREMENT,
     move VARCHAR(50) NOT NULL,
     description TEXT,
-    effect INT,
     power INT,
     accuracy INT,
     power_points INT,
