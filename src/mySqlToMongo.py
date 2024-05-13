@@ -77,5 +77,3 @@ def merge_and_group(
 def get_table(table_name: str) -> pd.DataFrame:
     mysql_engine = get_mysql_connection()
     return pd.read_sql(f"SELECT * FROM {table_name}", mysql_engine)
-
-mySQLtoMongoDB()
