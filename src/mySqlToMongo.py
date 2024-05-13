@@ -12,19 +12,13 @@ def mySQLtoMongoDB():
     pokemon_has_moves = get_table("pokemon_has_moves")
 
     ######### HANDLE RELATIONSHIPS #########
-    # https://stackoverflow.com/questions/64235312/how-to-implodereverse-of-pandas-explode-based-on-a-column
+    pivots = ["pokedex_number", "pokemon"]
+    
     # pokemon_has_types
-    pokemon = pd.merge(pokemon, pokemon_has_types, left_on="pokedex_number", right_on="pokemon_id")
-    temp = pokemon.groupby(["pokedex_number", "pokemon"]).agg({"type_id": list}).reset_index()
-    temp = temp.drop(columns=["pokemon"]).rename(columns={"type_id": "type_ids"})
-    pokemon = pd.merge(pokemon, temp, on="pokedex_number").drop(columns=["pokemon_id", "type_id"]).drop_duplicates(subset=["pokedex_number"])
+    pokemon = merge_and_group(pokemon, pokemon_has_types, "pokedex_number", "pokemon_id", pivots, ["pokemon"], "type_id", "type_ids")
     
     # pokemon_has_moves
-    pokemon = pd.merge(pokemon, pokemon_has_moves, left_on="pokedex_number", right_on="pokemon_id")
-    temp = pokemon.groupby(["pokedex_number", "pokemon"]).agg({"move_id": list}).reset_index()
-    temp = temp.drop(columns=["pokemon"]).rename(columns={"move_id": "move_ids"})
-    pokemon = pd.merge(pokemon, temp, on="pokedex_number").drop(columns=["pokemon_id", "move_id"]).drop_duplicates(subset=["pokedex_number"])
-    print(pokemon)
+    pokemon = merge_and_group(pokemon, pokemon_has_moves, "pokedex_number", "pokemon_id", pivots, ["pokemon"], "move_id", "move_ids")
 
     ######### RENAME ID COLUMNS TO _ID #########
     pokemon = pokemon.rename(columns={"pokedex_number": "_id"})
@@ -45,6 +39,23 @@ def mySQLtoMongoDB():
     db.moves.insert_many(moves)
 
     print("sucessfully uploaded data to MongoDB server")
+
+def merge_and_group(
+        dataframe: pd.DataFrame,
+        relationship_dataframe: pd.DataFrame,
+        left_on: str,
+        right_on: str,
+        groupby: list,
+        drop_columns: list,
+        old_column_name: str,
+        new_column_name: str,
+    ) -> pd.DataFrame:
+    dataframe = pd.merge(dataframe, relationship_dataframe, left_on=left_on, right_on=right_on)
+    # https://stackoverflow.com/questions/64235312/how-to-implodereverse-of-pandas-explode-based-on-a-column
+    grouped = dataframe.groupby(groupby).agg({old_column_name: list}).reset_index()
+    grouped = grouped.drop(columns=drop_columns).rename(columns={old_column_name: new_column_name})
+    dataframe = pd.merge(dataframe, grouped, on=left_on).drop(columns=[right_on, old_column_name]).drop_duplicates(subset=[left_on])
+    return dataframe
 
 def get_table(table_name: str) -> pd.DataFrame:
     mysql_engine = get_mysql_connection()
