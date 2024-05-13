@@ -1,27 +1,28 @@
 CREATE TABLE pokemon (
     pokedex_number INT,
-    name VARCHAR(20) NOT NULL,
-    description VARCHAR(255),
-    category VARCHAR(25) NOT NULL,
+    pokemon VARCHAR(20) NOT NULL,
+    description TEXT,
+    category VARCHAR(25),
     height DECIMAL(10),
     weight DECIMAL(10),
-    hp INT NOT NULL,
-    attack INT NOT NULL,
-    defense INT NOT NULL,
-    special_attack INT NOT NULL,
-    special_defense INT NOT NULL,
-    speed INT NOT NULL,
-    total INT NOT NULL,
-    capture_rate INT NOT NULL,
+    hp INT,
+    attack INT,
+    defense INT,
+    special_attack INT,
+    special_defense INT,
+    speed INT,
+    total INT,
+    capture_rate INT,
     is_legendary TINYINT,
+    is_mythical TINYINT,
     
     PRIMARY KEY (pokedex_number)
 );
 
 CREATE TABLE abilities (
     id INT AUTO_INCREMENT,
-    name VARCHAR(20) NOT NULL,
-    description VARCHAR(255),
+    ability VARCHAR(20) NOT NULL,
+    description TEXT,
     effect INT,
     
     PRIMARY KEY (id)
@@ -29,21 +30,20 @@ CREATE TABLE abilities (
 
 CREATE TABLE types (
     id INT AUTO_INCREMENT,
-    name VARCHAR(20) NOT NULL,
-    description VARCHAR(255),
+    type VARCHAR(20) NOT NULL,
+    description TEXT,
     
     PRIMARY KEY (id)
 );
 
 CREATE TABLE moves (
 	id INT AUTO_INCREMENT,
-    name VARCHAR(20) NOT NULL,
-    description VARCHAR(255),
-    category VARCHAR(35) NOT NULL,
+    move VARCHAR(50) NOT NULL,
+    description TEXT,
     effect INT,
-    power INT NOT NULL,
-    accuracy INT NOT NULL,
-    power_points INT NOT NULL,
+    power INT,
+    accuracy INT,
+    power_points INT,
     type_id INT,
     
     PRIMARY KEY (id),
@@ -82,10 +82,13 @@ CREATE TABLE pokemon_has_moves (
     FOREIGN KEY (move_id) REFERENCES moves(id)
 );
 
-CREATE TABLE types_impacts_types (
-    type_id INT,
-    impacts_type_id INT,
-    
-    FOREIGN KEY (type_id) REFERENCES types(id),
-    FOREIGN KEY (impacts_type_id) REFERENCES types(id)
+CREATE TABLE type_effectiveness (
+    attacking_type_id INT,
+    defending_type_id INT,
+    defending_type2_id INT,
+    multiplier DECIMAL(3, 2),
+
+    FOREIGN KEY (attacking_type_id) REFERENCES types(id),
+    FOREIGN KEY (defending_type_id) REFERENCES types(id),
+    FOREIGN KEY (defending_type2_id) REFERENCES types(id)
 );
