@@ -1,7 +1,7 @@
 import ast
 import cleanup
 import pandas as pd
-from getEngine import *
+from connections import get_mysql_connection
 from getDataFrame import *
 from resetDatabase import *
 
@@ -97,7 +97,7 @@ def csvToSQL() -> None:
     moves = cleanup.addTypeFK(moves, types)
     type_effectiveness = cleanup.type_effectiveness(type_effectiveness)
 
-    engine = getEngine()
+    engine = get_mysql_connection()
 
     resetDatabase(engine) # else foreign keys won't work, further explanation below @ why reset the database?)
 
