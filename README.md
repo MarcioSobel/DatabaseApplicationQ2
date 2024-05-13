@@ -14,6 +14,8 @@
 - [Rodando o código](#rodando-o-código)
     - [Configurando o ambiente virtual](#configurando-o-ambiente-virtual)
     - [Instalando pré-requisitos](#instalando-pré-requisitos)
+    - [Testando o projeto](#testando-o-projeto)
+    
 ## Sobre o projeto
 O objetivo do projeto é trabalhar as capacidades de modelagem lógica e física, engenharia reversa a partir de um dataset pré-existente e utilização de bases de dados NoSQL.
 
@@ -145,5 +147,5 @@ $ pip install -r requirements.txt
 ### Testando o projeto
 Para testar os algoritmos, basta executar o comando:
 ```
-$ python ./src/main.py
+$ python src/main.py
 ```
