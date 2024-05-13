@@ -1,2 +1,5 @@
 .venv
+.~lock.*
+.vscode
 __pycache__
+convertedData
