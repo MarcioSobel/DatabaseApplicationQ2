@@ -48,13 +48,18 @@ def merge_and_group(
         groupby: list,
         drop_columns: list,
         old_column_name: str,
-        new_column_name: str,
+        new_column_name: str = "",
     ) -> pd.DataFrame:
     dataframe = pd.merge(dataframe, relationship_dataframe, left_on=left_on, right_on=right_on)
     # https://stackoverflow.com/questions/64235312/how-to-implodereverse-of-pandas-explode-based-on-a-column
     grouped = dataframe.groupby(groupby).agg({old_column_name: list}).reset_index()
-    grouped = grouped.drop(columns=drop_columns).rename(columns={old_column_name: new_column_name})
-    dataframe = pd.merge(dataframe, grouped, on=left_on).drop(columns=[right_on, old_column_name]).drop_duplicates(subset=[left_on])
+    grouped = grouped.drop(columns=drop_columns)
+    if new_column_name:
+        grouped = grouped.rename(columns={old_column_name: new_column_name})
+        dataframe = pd.merge(dataframe, grouped, on=left_on).drop(columns=[right_on, old_column_name]).drop_duplicates(subset=[left_on])
+    else:
+        dataframe = pd.merge(dataframe, grouped, on=left_on).drop(columns=[right_on]).drop_duplicates(subset=left_on)
+        dataframe = dataframe.drop(columns=[f"{old_column_name}_x"]).rename(columns={f"{old_column_name}_y": old_column_name})
     return dataframe
 
 def get_table(table_name: str) -> pd.DataFrame:
