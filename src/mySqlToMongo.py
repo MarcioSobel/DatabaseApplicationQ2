@@ -7,9 +7,11 @@ def mySQLtoMongoDB():
     pokemon = get_table("pokemon")
     types = get_table("types")
     moves = get_table("moves")
+    abilities = get_table("abilities")
 
     pokemon_has_types = get_table("pokemon_has_types")
     pokemon_has_moves = get_table("pokemon_has_moves")
+    pokemon_has_abilities = get_table("pokemon_has_abilities")
     pokemon_evolves_to_pokemon = get_table("pokemon_evolves_to_pokemon")
 
     ######### HANDLE RELATIONSHIPS #########
@@ -21,6 +23,9 @@ def mySQLtoMongoDB():
     # pokemon_has_moves
     pokemon = merge_and_group(pokemon, pokemon_has_moves, "pokedex_number", "pokemon_id", pivots, ["pokemon"], "move_id", "move_ids")
 
+    # pokemon_has_abilities
+    pokemon = merge_and_group(pokemon, pokemon_has_abilities, "pokedex_number", "pokemon_id", pivots, ["pokemon"], "ability_id", "ability_ids")
+
     # pokemon_evolves_to_pokemon
     pokemon = merge_and_group(pokemon, pokemon_evolves_to_pokemon, "pokedex_number", "evolves_from", pivots, ["pokemon"], "evolves_to")
 
@@ -28,11 +33,13 @@ def mySQLtoMongoDB():
     pokemon = pokemon.rename(columns={"pokedex_number": "_id"})
     types = types.rename(columns={"id": "_id"})
     moves = moves.rename(columns={"id": "_id"})
+    abilities = abilities.rename(columns={"id": "_id"})
 
     ######### CONVERT FROM DATAFRAME TO DICTS #########
     pokemon = pokemon.to_dict("records")
     types = types.to_dict("records")
     moves = moves.to_dict("records")
+    abilities = abilities.to_dict("records")
 
     ######### SEND TO MONGODB #########
     mongodb_client.drop_database("pokemon")
@@ -41,6 +48,7 @@ def mySQLtoMongoDB():
     db.pokemon.insert_many(pokemon)
     db.types.insert_many(types)
     db.moves.insert_many(moves)
+    db.abilities.insert_many(abilities)
 
     print("sucessfully uploaded data to MongoDB server")
 
