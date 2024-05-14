@@ -11,6 +11,7 @@ def mySQLtoMongoDB():
 
     pokemon_has_types = get_table("pokemon_has_types")
     pokemon_has_moves = get_table("pokemon_has_moves")
+    type_effectiveness = get_table("type_effectiveness")
     pokemon_has_abilities = get_table("pokemon_has_abilities")
     pokemon_evolves_to_pokemon = get_table("pokemon_evolves_to_pokemon")
 
@@ -29,11 +30,14 @@ def mySQLtoMongoDB():
     # pokemon_evolves_to_pokemon
     pokemon = merge_and_group(pokemon, pokemon_evolves_to_pokemon, "pokedex_number", "evolves_from", pivots, ["pokemon"], "evolves_to")
 
+    # type_effectiveness
+    type_effectiveness = type_effectiveness_to_dict(type_effectiveness)
+
     ######### RENAME ID COLUMNS TO _ID #########
     pokemon = pokemon.rename(columns={"pokedex_number": "_id"})
+    abilities = abilities.rename(columns={"id": "_id"})
     types = types.rename(columns={"id": "_id"})
     moves = moves.rename(columns={"id": "_id"})
-    abilities = abilities.rename(columns={"id": "_id"})
 
     ######### CONVERT FROM DATAFRAME TO DICTS #########
     pokemon = pokemon.to_dict("records")
@@ -49,6 +53,7 @@ def mySQLtoMongoDB():
     db.types.insert_many(types)
     db.moves.insert_many(moves)
     db.abilities.insert_many(abilities)
+    db.type_effectiveness.insert_many(type_effectiveness)
 
     print("sucessfully uploaded data to MongoDB server")
 
@@ -73,6 +78,28 @@ def merge_and_group(
         dataframe = pd.merge(dataframe, grouped, on=left_on).drop(columns=[right_on]).drop_duplicates(subset=left_on)
         dataframe = dataframe.drop(columns=[f"{old_column_name}_x"]).rename(columns={f"{old_column_name}_y": old_column_name})
     return dataframe
+
+def type_effectiveness_to_dict(dataFrame: pd.DataFrame) -> list:
+    dataFrame["defending_type_ids"] = dataFrame[['defending_type_id', 'defending_type2_id']].values.tolist()
+    dataFrame["defending_type_ids"] = dataFrame["defending_type_ids"].apply(lambda x: [int(i) if i.is_integer() else i for i in x])
+    dataFrame = dataFrame.drop(columns=["defending_type_id", "defending_type2_id"])
+    dataFrame["against"] = dataFrame[["multiplier", "defending_type_ids"]].values.tolist()
+    dataFrame = dataFrame.groupby("attacking_type_id")["against"].apply(list).reset_index()
+
+    result = []
+    for _, row in dataFrame.iterrows():
+        row_doc = {}
+        row_doc["type_id"] = row["attacking_type_id"]
+        row_doc["against"] = []
+
+        for item in row["against"]:
+            item_doc = {}
+            item_doc["multiplier"] = item[0]
+            item_doc["type_ids"] = [x for x in item[1] if pd.notna(x)]
+
+            row_doc["against"].append(item_doc)
+        result.append(row_doc)
+    return result
 
 def get_table(table_name: str) -> pd.DataFrame:
     mysql_engine = get_mysql_connection()
