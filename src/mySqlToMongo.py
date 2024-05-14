@@ -2,8 +2,6 @@ import pandas as pd
 from connections import *
 
 def mySQLtoMongoDB():
-    mongodb_client: MongoClient = get_mongodb_client()
-
     pokemon = get_table("pokemon")
     types = get_table("types")
     moves = get_table("moves")
@@ -46,6 +44,7 @@ def mySQLtoMongoDB():
     abilities = abilities.to_dict("records")
 
     ######### SEND TO MONGODB #########
+    mongodb_client = MongoClient("mongodb://root:root@localhost:27017")
     mongodb_client.drop_database("pokemon")
     db = mongodb_client["pokemon"]
     
@@ -94,8 +93,8 @@ def type_effectiveness_to_dict(dataFrame: pd.DataFrame) -> list:
 
         for item in row["against"]:
             item_doc = {}
-            item_doc["multiplier"] = item[0]
             item_doc["type_ids"] = [x for x in item[1] if pd.notna(x)]
+            item_doc["multiplier"] = item[0]
 
             row_doc["against"].append(item_doc)
         result.append(row_doc)
